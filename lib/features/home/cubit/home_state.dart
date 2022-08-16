@@ -12,4 +12,7 @@ class HomeLoading extends HomeState {
   const HomeLoading();
 }
 
-class HomeLoaded extends HomeState {}
+class HomeLoaded extends HomeState {
+  final List<String> response;
+  const HomeLoaded(this.response);
+}
