@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:world_clocks/core/extensions/context_extension.dart';
+import 'package:world_clocks/core/utils/theme/cubit/theme_cubit.dart';
 import 'package:world_clocks/features/home/cubit/home_cubit.dart';
 import 'package:world_clocks/features/home/service/home_service.dart';
 import 'package:world_clocks/features/timezone_detail/view/timezone_detail_view.dart';
@@ -13,11 +15,54 @@ class HomeView extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeCubit(HomeService()),
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: _buildAppBar(context),
         body: _buildBody(),
       ),
     );
   }
+}
+
+AppBar _buildAppBar(BuildContext context) {
+  return AppBar(
+    backgroundColor: context.colors.secondary,
+    shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(32), bottomRight: Radius.circular(32))),
+    title: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Günaydın, Özgür!'),
+        FittedBox(
+          child: Text(
+            DateFormat(DateFormat.HOUR24_MINUTE).format(DateTime.now()),
+            style: const TextStyle(fontSize: 30),
+          ),
+        ),
+        FittedBox(
+          child: Text(
+            DateFormat.MMMMEEEEd()
+                .format(DateTime.now())
+                .split(',')
+                .reversed
+                .join(', '),
+          ),
+        ),
+      ],
+    ),
+    actions: [
+      BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, state) {
+          return IconButton(
+              onPressed: () {
+                context.read<ThemeCubit>().toggleSwitch(!state.isDark);
+              },
+              icon: const Icon(Icons.dark_mode_outlined));
+        },
+      )
+    ],
+    toolbarHeight: kToolbarHeight * 3,
+    elevation: 0,
+  );
 }
 
 BlocBuilder<HomeCubit, HomeState> _buildBody() {
