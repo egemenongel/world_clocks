@@ -62,8 +62,10 @@ class NetworkManager {
     }
   }
 
-  Future primitiveRequest() async {
-    var response = await dio.get(ApiConstants.timezone,
+  Future primitiveRequest({
+    required String path,
+  }) async {
+    var response = await dio.get(path,
         options: Options(
           contentType: ApiConstants.json,
         ));
