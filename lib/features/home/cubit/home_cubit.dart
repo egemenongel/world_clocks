@@ -12,6 +12,6 @@ class HomeCubit extends Cubit<HomeState> {
   Future fetchAreas() async {
     emit(const HomeLoading());
     var response = await _homeService.fetchTimezoneAreas();
-    emit(HomeLoaded(response));
+    emit(HomeLoaded(response!));
   }
 }

@@ -63,15 +63,29 @@ class NetworkManager {
   }
 
   Future primitiveRequest({
+    required RequestTypes method,
     required String path,
   }) async {
-    var response = await dio.get(path,
-        options: Options(
-          contentType: ApiConstants.json,
-        ));
-    List dynamicList = response.data;
+    try {
+      var response = await dio.request(
+        path,
+        options: Options(method: method.name),
+      );
+      if (response.statusCode == 200) {
+        List dynamicList = response.data;
 
-    List<String> list = dynamicList.map((e) => e.toString()).toList();
-    return list;
+        List<String> list = dynamicList.map((e) => e.toString()).toList();
+        return list;
+      } else {
+        log('$path ${method.name} FAILED | Status Code: ${response.statusCode} | Status Message: ${response.statusMessage}');
+        return null;
+      }
+    } on DioError {
+      // log('$path ${method.name} DIO ERROR | Error : $dioError');
+      // return _showError(dioError);
+    } catch (error) {
+      log('$path ${method.name} ERROR | Error : $error');
+      return null;
+    }
   }
 }

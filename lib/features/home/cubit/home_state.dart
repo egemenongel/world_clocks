@@ -13,6 +13,6 @@ class HomeLoading extends HomeState {
 }
 
 class HomeLoaded extends HomeState {
-  final List<String> response;
+  final List<dynamic> response;
   const HomeLoaded(this.response);
 }
