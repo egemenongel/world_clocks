@@ -112,19 +112,71 @@ Widget _buildBody(BuildContext context, HomeState state) {
   }
 }
 
-Widget _buildAreaTile(BuildContext context, String timezone) {
+SizedBox _buildAreaTile(BuildContext context, String timezone) {
+  return SizedBox(
+    height: 70,
+    child: Stack(
+      children: [
+        _buildTitle(context, timezone),
+        _buildArrowIcon(context, timezone),
+      ],
+    ),
+  );
+}
+
+Padding _buildTitle(BuildContext context, String timezone) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-    child: InkWell(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => TimezoneDetailView(timezone: timezone))),
-      child: ListTile(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        tileColor: context.colors.primary,
-        title: Text(timezone.replaceAll('/', ', ').replaceAll('_', ' '),
-            style: context.textTheme.subtitle1!
-                .copyWith(color: context.colors.onPrimary)),
-        trailing: const Icon(Icons.keyboard_arrow_right_rounded),
+    padding: const EdgeInsets.symmetric(horizontal: 30),
+    child: Column(
+      children: [
+        InkWell(
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Container(
+                height: 60,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: context.colors.primary,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Text(timezone.replaceAll('/', ', ').replaceAll('_', ' '),
+                        style: context.textTheme.subtitle1!
+                            .copyWith(color: context.colors.onPrimary)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+SizedBox _buildArrowIcon(BuildContext context, String timezone) {
+  return SizedBox(
+    height: 60,
+    child: Align(
+      alignment: Alignment.centerRight,
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => TimezoneDetailView(timezone: timezone))),
+        icon: CircleAvatar(
+          backgroundColor: const Color(0xffFAFCFF),
+          radius: 15,
+          child: CircleAvatar(
+            backgroundColor: context.colors.primary,
+            radius: 12,
+            child: Icon(
+              Icons.keyboard_arrow_right,
+              color: context.colors.onPrimary,
+            ),
+          ),
+        ),
       ),
     ),
   );
