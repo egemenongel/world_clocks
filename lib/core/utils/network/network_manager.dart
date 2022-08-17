@@ -72,10 +72,14 @@ class NetworkManager {
         options: Options(method: method.name),
       );
       if (response.statusCode == 200) {
-        List dynamicList = response.data ?? [];
-
-        List<String> list = dynamicList.map((e) => e.toString()).toList();
-        return list;
+        if (response.data is List) {
+          List dynamicList = response.data;
+          List<String> list = dynamicList.isNotEmpty
+              ? dynamicList.map((e) => e.toString()).toList()
+              : [];
+          return list;
+        }
+        return response.data;
       } else {
         log('$path ${method.name} FAILED | Status Code: ${response.statusCode} | Status Message: ${response.statusMessage}');
         return null;

@@ -8,9 +8,22 @@ class AppThemeLight {
 
   AppThemeLight._init();
 
-  @override
   ThemeData get theme => ThemeData(
-      colorScheme: _appColorScheme, canvasColor: const Color(0xffFAFCFF));
+        colorScheme: _appColorScheme,
+        canvasColor: const Color(0xffFAFCFF),
+        textTheme: const TextTheme(
+          headline1: TextStyle(color: Color(0xff002359)),
+          headline2: TextStyle(color: Color(0xff002359)),
+          headline3: TextStyle(color: Color(0xff002359)),
+          headline4: TextStyle(color: Color(0xff002359)),
+          headline5: TextStyle(color: Color(0xff002359)),
+          headline6: TextStyle(color: Color(0xff002359)),
+          bodyText1: TextStyle(color: Color(0xff002359)),
+          bodyText2: TextStyle(color: Color(0xff002359)),
+          subtitle1: TextStyle(color: Color(0xff002359)),
+          subtitle2: TextStyle(color: Color(0xff002359)),
+        ),
+      );
   ColorScheme get _appColorScheme {
     return const ColorScheme(
       primary: Color(0xffE3EEFF),

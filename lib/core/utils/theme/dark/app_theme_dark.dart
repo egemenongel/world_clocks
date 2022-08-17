@@ -11,6 +11,7 @@ class AppThemeDark {
   ThemeData get theme => ThemeData(
         colorScheme: _appColorScheme,
         canvasColor: const Color(0xff002359),
+        
       );
   ColorScheme get _appColorScheme {
     return const ColorScheme(

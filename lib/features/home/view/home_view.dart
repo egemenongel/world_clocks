@@ -97,9 +97,14 @@ Widget _buildBody(BuildContext context, HomeState state) {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: state.response
-                .map((timezone) => _buildAreaTile(context, timezone))
-                .toList()));
+            children: [
+          const SizedBox(
+            height: 20,
+          ),
+          ...state.response
+              .map((timezone) => _buildAreaTile(context, timezone))
+              .toList()
+        ]));
   } else {
     return const Center(
       child: Text("ERROR"),

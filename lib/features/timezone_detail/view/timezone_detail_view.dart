@@ -29,6 +29,7 @@ class TimezoneDetailView extends StatelessWidget {
               } else if (state is TimezoneDetailLoaded) {
                 return _buildBody(context, state.response);
               } else {
+                context.read<TimezoneDetailCubit>().fetchTimezone(timezone);
                 return const Center(
                   child: Text("ERROR"),
                 );
@@ -40,19 +41,28 @@ class TimezoneDetailView extends StatelessWidget {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: const Text("WORLD TIME"),
+      title: const Text(
+        "WORLD TIME",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       foregroundColor: context.colors.onPrimary,
       centerTitle: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(32),
+              bottomRight: Radius.circular(32))),
+      elevation: 0,
     );
   }
 
   Widget _buildBody(BuildContext context, TimezoneModel timezoneModel) {
     final String clock = timezoneModel.datetime.toString().split('T')[1];
-
+    final List<String> countryArray = timezoneModel.timezone!.split('/');
     return Padding(
       padding: context.paddingNormal,
       child: Column(
         children: [
+          const SizedBox(height: 30),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -62,27 +72,7 @@ class TimezoneDetailView extends StatelessWidget {
               ),
               Expanded(
                 flex: 1,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 10,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: context.colors.onPrimary,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 10,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: context.colors.onPrimary,
-                      ),
-                    ),
-                  ],
-                ),
+                child: _buildDots(context),
               ),
               Expanded(
                 flex: 5,
@@ -91,46 +81,19 @@ class TimezoneDetailView extends StatelessWidget {
             ],
           ),
           const SizedBox(
-            height: 50,
+            height: 20,
           ),
-          Text(timezoneModel.timezone!.split('/')[0]),
-          Text(timezoneModel.timezone!.split('/')[1]),
+          _buildArea(context, countryArray),
+          const SizedBox(
+            height: 10,
+          ),
+          _buildCountry(context, countryArray),
+          const SizedBox(
+            height: 10,
+          ),
           _buildDate(context, timezoneModel),
         ],
       ),
-    );
-  }
-
-  Column _buildDate(BuildContext context, TimezoneModel timezoneModel) {
-    final DateTime date = DateTime.parse(timezoneModel.datetime!.split('T')[0]);
-    return Column(
-      children: [
-        Text(timezoneModel.datetime.toString()),
-        Padding(
-          padding: context.paddingLow,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                DateFormat('EEEE').format(date),
-              ),
-              const Text(' GMT'),
-              Text(' ${timezoneModel.utcOffset}'),
-            ],
-          ),
-        ),
-        Padding(
-          padding: context.paddingLow,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('${date.day} '),
-              Text(DateFormat('MMMM').format(date)),
-              Text(' ${date.year}'),
-            ],
-          ),
-        )
-      ],
     );
   }
 
@@ -150,6 +113,71 @@ class TimezoneDetailView extends StatelessWidget {
         timePart,
         style: TextStyle(color: context.colors.onPrimary),
       )),
+    );
+  }
+
+  Column _buildDots(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          height: 10,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: context.colors.onPrimary,
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Container(
+          height: 10,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: context.colors.onPrimary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Text _buildArea(BuildContext context, List<String> countryArray) {
+    return Text(
+      countryArray.length == 3
+          ? '${countryArray[1].split('_').join(' ')}, ${countryArray[2].split('_').join(' ')}'
+          : countryArray[1].split('_').join(' '),
+      style: context.textTheme.headline6!.copyWith(),
+    );
+  }
+
+  Text _buildCountry(BuildContext context, List<String> countryArray) =>
+      Text(countryArray[0], style: context.textTheme.bodyText2!.copyWith());
+
+  Column _buildDate(BuildContext context, TimezoneModel timezoneModel) {
+    final DateTime date = DateTime.parse(timezoneModel.datetime!.split('T')[0]);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              DateFormat('EEEE').format(date),
+            ),
+            const Text(', GMT'),
+            Text(' ${timezoneModel.utcOffset}'),
+          ],
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(DateFormat('MMMM').format(date)),
+            Text(' ${date.day}, '),
+            Text('${date.year}'),
+          ],
+        ),
+      ],
     );
   }
 }
