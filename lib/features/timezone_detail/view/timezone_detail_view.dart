@@ -29,7 +29,6 @@ class TimezoneDetailView extends StatelessWidget {
               } else if (state is TimezoneDetailLoaded) {
                 return _buildBody(context, state.response);
               } else {
-                context.read<TimezoneDetailCubit>().fetchTimezone(timezone);
                 return const Center(
                   child: Text("ERROR"),
                 );
@@ -41,9 +40,10 @@ class TimezoneDetailView extends StatelessWidget {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: const Text(
+      title: Text(
         "WORLD TIME",
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style:
+            context.textTheme.headline6!.copyWith(fontWeight: FontWeight.w600),
       ),
       foregroundColor: context.colors.onPrimary,
       centerTitle: true,
@@ -106,12 +106,13 @@ class TimezoneDetailView extends StatelessWidget {
       height: 140,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
-        border: Border.all(color: context.colors.onSurface),
+        color: context.colors.surface,
+        border: Border.all(color: context.colors.onSurface, width: 2),
       ),
       child: FittedBox(
           child: Text(
         timePart,
-        style: TextStyle(color: context.colors.onPrimary),
+        style: const TextStyle(fontWeight: FontWeight.w600),
       )),
     );
   }
@@ -145,7 +146,7 @@ class TimezoneDetailView extends StatelessWidget {
       countryArray.length == 3
           ? '${countryArray[1].split('_').join(' ')}, ${countryArray[2].split('_').join(' ')}'
           : countryArray[1].split('_').join(' '),
-      style: context.textTheme.headline6!.copyWith(),
+      style: context.textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppThemeLight {
   static AppThemeLight? _instance;
@@ -11,17 +12,19 @@ class AppThemeLight {
   ThemeData get theme => ThemeData(
         colorScheme: _appColorScheme,
         canvasColor: const Color(0xffFAFCFF),
-        textTheme: const TextTheme(
-          headline1: TextStyle(color: Color(0xff002359)),
-          headline2: TextStyle(color: Color(0xff002359)),
-          headline3: TextStyle(color: Color(0xff002359)),
-          headline4: TextStyle(color: Color(0xff002359)),
-          headline5: TextStyle(color: Color(0xff002359)),
-          headline6: TextStyle(color: Color(0xff002359)),
-          bodyText1: TextStyle(color: Color(0xff002359)),
-          bodyText2: TextStyle(color: Color(0xff002359)),
-          subtitle1: TextStyle(color: Color(0xff002359)),
-          subtitle2: TextStyle(color: Color(0xff002359)),
+        textTheme: GoogleFonts.montserratTextTheme(
+          const TextTheme(
+            headline1: TextStyle(color: Color(0xff002359)),
+            headline2: TextStyle(color: Color(0xff002359)),
+            headline3: TextStyle(color: Color(0xff002359)),
+            headline4: TextStyle(color: Color(0xff002359)),
+            headline5: TextStyle(color: Color(0xff002359)),
+            headline6: TextStyle(color: Color(0xff002359)),
+            bodyText1: TextStyle(color: Color(0xff002359)),
+            bodyText2: TextStyle(color: Color(0xff002359)),
+            subtitle1: TextStyle(color: Color(0xff002359)),
+            subtitle2: TextStyle(color: Color(0xff002359)),
+          ),
         ),
       );
   ColorScheme get _appColorScheme {
@@ -32,8 +35,8 @@ class AppThemeLight {
       onSecondary: Colors.black,
       background: Colors.grey,
       onBackground: Color(0xff02327D),
-      surface: Color(0xff8FAFE0),
-      onSurface: Color(0xff02327D),
+      surface: Colors.white,
+      onSurface: Color(0xff002359),
       error: Colors.red,
       onError: Colors.white,
       brightness: Brightness.light,
