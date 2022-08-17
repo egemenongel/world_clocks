@@ -18,16 +18,31 @@ class HomeView extends StatelessWidget {
       create: (context) => HomeCubit(HomeService()),
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
-          return Stack(
-            children: [
-              Scaffold(
-                appBar: _buildAppBar(context),
-                body: RefreshIndicator(
-                    onRefresh: () async =>
-                        context.read<HomeCubit>().fetchAreas(),
-                    child: _buildBody(context, state)),
-              ),
-            ],
+          return Scaffold(
+            body: Stack(
+              clipBehavior: Clip.antiAlias,
+              children: [
+                Positioned(
+                  top: 0,
+                  height: kToolbarHeight * 5,
+                  width: context.width,
+                  child: _buildAppBar(context),
+                ),
+                Positioned(
+                  top: 240,
+                  left: 0.0,
+                  right: 0.0,
+                  child: _buildSearchBar(context),
+                ),
+                Positioned.fill(
+                  top: 300,
+                  child: RefreshIndicator(
+                      onRefresh: () async =>
+                          context.read<HomeCubit>().fetchAreas(),
+                      child: _buildBody(context, state)),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -93,6 +108,27 @@ AppBar _buildAppBar(BuildContext context) {
   );
 }
 
+Widget _buildSearchBar(BuildContext context) {
+  return Padding(
+    padding: context.paddingNormalHorizontal,
+    child: TextField(
+        style: context.textTheme.bodyText1!
+            .copyWith(color: const Color(0xff002359)),
+        decoration: InputDecoration(
+            prefixIcon: const Icon(
+              Icons.search,
+              color: Color(0xff002359),
+            ),
+            hintText: 'Arama',
+            hintStyle: const TextStyle(color: Color(0xff002359)),
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+            ))),
+  );
+}
+
 Widget _buildBody(BuildContext context, HomeState state) {
   if (state is HomeLoading || state is HomeInital) {
     return const Center(child: CircularProgressIndicator());
@@ -103,7 +139,7 @@ Widget _buildBody(BuildContext context, HomeState state) {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           ...state.response
               .map((timezone) => _buildAreaTile(context, timezone))
