@@ -9,10 +9,15 @@ class HomeInital extends HomeState {
 }
 
 class HomeLoading extends HomeState {
-  const HomeLoading();
+  final bool isLoading;
+  const HomeLoading(this.isLoading);
 }
 
 class HomeLoaded extends HomeState {
   final List<dynamic> response;
   const HomeLoaded(this.response);
+}
+
+class HomeError extends HomeState {
+  const HomeError();
 }

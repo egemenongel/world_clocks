@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:world_clocks/core/components/circular_icon_button.dart';
 import 'package:world_clocks/core/extensions/context_extension.dart';
 import 'package:world_clocks/core/utils/theme/cubit/theme_cubit.dart';
 import 'package:world_clocks/features/home/cubit/home_cubit.dart';
@@ -14,9 +15,20 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeCubit(HomeService()),
-      child: Scaffold(
-        appBar: _buildAppBar(context),
-        body: _buildBody(),
+      child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          return Stack(
+            children: [
+              Scaffold(
+                appBar: _buildAppBar(context),
+                body: RefreshIndicator(
+                    onRefresh: () async =>
+                        context.read<HomeCubit>().fetchAreas(),
+                    child: _buildBody(context, state)),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -24,7 +36,9 @@ class HomeView extends StatelessWidget {
 
 AppBar _buildAppBar(BuildContext context) {
   return AppBar(
-    backgroundColor: context.colors.secondary,
+    titleSpacing: 20,
+    backgroundColor: context.colors.primary,
+    foregroundColor: context.colors.onPrimary,
     shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(32), bottomRight: Radius.circular(32))),
@@ -32,11 +46,17 @@ AppBar _buildAppBar(BuildContext context) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Günaydın, Özgür!'),
+        const SizedBox(
+          height: 10,
+        ),
         FittedBox(
           child: Text(
             DateFormat(DateFormat.HOUR24_MINUTE).format(DateTime.now()),
             style: const TextStyle(fontSize: 30),
           ),
+        ),
+        const SizedBox(
+          height: 10,
         ),
         FittedBox(
           child: Text(
@@ -52,44 +72,39 @@ AppBar _buildAppBar(BuildContext context) {
     actions: [
       BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {
-          return IconButton(
-              onPressed: () {
-                context.read<ThemeCubit>().toggleSwitch(!state.isDark);
-              },
-              icon: const Icon(Icons.dark_mode_outlined));
+          return CircularIconButton(
+            iconData: state.isDark
+                ? Icons.light_mode_outlined
+                : Icons.dark_mode_outlined,
+            voidCallback: () => context.read<ThemeCubit>().toggleSwitch(),
+            backgroundColor: context.colors.onPrimary,
+            iconColor: context.colors.primary,
+          );
         },
-      )
+      ),
     ],
-    toolbarHeight: kToolbarHeight * 3,
+    toolbarHeight: kToolbarHeight * 3.5,
     elevation: 0,
+    automaticallyImplyLeading: false,
   );
 }
 
-BlocBuilder<HomeCubit, HomeState> _buildBody() {
-  return BlocBuilder<HomeCubit, HomeState>(
-    builder: (context, state) {
-      if (state is HomeLoading) {
-        return const Center(child: CircularProgressIndicator());
-      } else if (state is HomeLoaded) {
-        return RefreshIndicator(
-          onRefresh: () async => context.read<HomeCubit>().fetchAreas(),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: state.response
-                  .map((timezone) => _buildAreaTile(context, timezone))
-                  .toList(),
-            ),
-          ),
-        );
-      } else {
-        return const Center(
-          child: Text("ERROR"),
-        );
-      }
-    },
-  );
+Widget _buildBody(BuildContext context, HomeState state) {
+  if (state is HomeLoading || state is HomeInital) {
+    return const Center(child: CircularProgressIndicator());
+  } else if (state is HomeLoaded) {
+    return SingleChildScrollView(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: state.response
+                .map((timezone) => _buildAreaTile(context, timezone))
+                .toList()));
+  } else {
+    return const Center(
+      child: Text("ERROR"),
+    );
+  }
 }
 
 Widget _buildAreaTile(BuildContext context, String timezone) {
@@ -101,7 +116,9 @@ Widget _buildAreaTile(BuildContext context, String timezone) {
       child: ListTile(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         tileColor: context.colors.primary,
-        title: Text(timezone.replaceAll('/', ', ').replaceAll('_', ' ')),
+        title: Text(timezone.replaceAll('/', ', ').replaceAll('_', ' '),
+            style: context.textTheme.subtitle1!
+                .copyWith(color: context.colors.onPrimary)),
         trailing: const Icon(Icons.keyboard_arrow_right_rounded),
       ),
     ),

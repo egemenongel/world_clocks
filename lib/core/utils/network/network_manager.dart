@@ -72,7 +72,7 @@ class NetworkManager {
         options: Options(method: method.name),
       );
       if (response.statusCode == 200) {
-        List dynamicList = response.data;
+        List dynamicList = response.data ?? [];
 
         List<String> list = dynamicList.map((e) => e.toString()).toList();
         return list;
