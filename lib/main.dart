@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:world_clocks/core/utils/theme/cubit/theme_cubit.dart';
-import 'package:world_clocks/features/home/view/home_view.dart';
+import 'package:world_clocks/features/splash/view/splash_view.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(BlocProvider(
+    create: (context) => ThemeCubit(),
+    child: BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, state) {
+        return MyApp(
+          state: state,
+        );
+      },
+    ),
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+  const MyApp({
+    Key? key,
+    this.state,
+  }) : super(key: key);
+  final ThemeState? state;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ThemeCubit(),
-      child: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, state) {
-          return MaterialApp(
-              theme: state.currentTheme,
-              title: 'World Clocks',
-              home: const HomeView());
-        },
-      ),
-    );
+    return MaterialApp(
+        theme: state!.currentTheme,
+        title: 'World Clocks',
+        home: const SplashView());
   }
 }

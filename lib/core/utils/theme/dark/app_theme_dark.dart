@@ -8,7 +8,6 @@ class AppThemeDark {
 
   AppThemeDark._init();
 
-  @override
   ThemeData get theme => ThemeData(
         colorScheme: _appColorScheme,
         canvasColor: const Color(0xff002359),

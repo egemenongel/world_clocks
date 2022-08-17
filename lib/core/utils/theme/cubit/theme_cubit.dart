@@ -7,5 +7,9 @@ part 'theme_state.dart';
 
 class ThemeCubit extends Cubit<ThemeState> {
   ThemeCubit() : super(ThemeState(isDark: false));
-  void toggleSwitch(bool value) => emit(state.copyWith(changeTheme: value));
+  bool isDark = false;
+  void toggleSwitch() {
+    isDark = !isDark;
+    emit(state.copyWith(changeTheme: isDark));
+  }
 }
