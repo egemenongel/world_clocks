@@ -4,4 +4,5 @@ class ApiConstants {
 
   static const baseUrl = 'http://worldtimeapi.org/api';
   static const timezone = '/timezone';
+  static selectedTimezone(String selected) => '$timezone/$selected';
 }
