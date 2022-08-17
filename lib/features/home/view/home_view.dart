@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:world_clocks/core/components/circular_icon_button.dart';
 import 'package:world_clocks/core/extensions/context_extension.dart';
+import 'package:world_clocks/core/utils/locale/shared_preferences_service.dart';
 import 'package:world_clocks/core/utils/theme/cubit/theme_cubit.dart';
 import 'package:world_clocks/features/home/cubit/home_cubit.dart';
 import 'package:world_clocks/features/home/service/home_service.dart';
@@ -49,11 +50,10 @@ AppBar _buildAppBar(BuildContext context) {
         const SizedBox(
           height: 10,
         ),
-        FittedBox(
-          child: Text(
-            DateFormat(DateFormat.HOUR24_MINUTE).format(DateTime.now()),
-            style: const TextStyle(fontSize: 30),
-          ),
+        Text(
+          DateFormat(DateFormat.HOUR24_MINUTE).format(DateTime.now()),
+          style: context.textTheme.headline4!
+              .copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(
           height: 10,
@@ -76,7 +76,11 @@ AppBar _buildAppBar(BuildContext context) {
             iconData: state.isDark
                 ? Icons.light_mode_outlined
                 : Icons.dark_mode_outlined,
-            voidCallback: () => context.read<ThemeCubit>().toggleSwitch(),
+            voidCallback: () {
+              context.read<ThemeCubit>().toggleSwitch();
+              SharedPreferencesService.setTheme(
+                  context.read<ThemeCubit>().isDark);
+            },
             backgroundColor: context.colors.onPrimary,
             iconColor: context.colors.primary,
           );
@@ -156,8 +160,9 @@ Padding _buildTitle(BuildContext context, String timezone) {
   );
 }
 
-SizedBox _buildArrowIcon(BuildContext context, String timezone) {
-  return SizedBox(
+Container _buildArrowIcon(BuildContext context, String timezone) {
+  return Container(
+    padding: const EdgeInsets.only(right: 5),
     height: 60,
     child: Align(
       alignment: Alignment.centerRight,
@@ -166,7 +171,7 @@ SizedBox _buildArrowIcon(BuildContext context, String timezone) {
         onPressed: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => TimezoneDetailView(timezone: timezone))),
         icon: CircleAvatar(
-          backgroundColor: const Color(0xffFAFCFF),
+          backgroundColor: context.colors.background,
           radius: 15,
           child: CircleAvatar(
             backgroundColor: context.colors.primary,

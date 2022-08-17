@@ -33,7 +33,7 @@ class AppThemeDark {
       onPrimary: Colors.white,
       secondary: Color(0xff02327D),
       onSecondary: Colors.white,
-      background: Colors.red,
+      background: Color(0xff002359),
       onBackground: Colors.white,
       surface: Color(0xff02327D),
       onSurface: Color(0xff02327D),

@@ -33,7 +33,7 @@ class AppThemeLight {
       onPrimary: Color(0xff002359),
       secondary: Color(0xff8FAFE0),
       onSecondary: Colors.black,
-      background: Colors.grey,
+      background: Color(0xffFAFCFF),
       onBackground: Color(0xff02327D),
       surface: Colors.white,
       onSurface: Color(0xff002359),
